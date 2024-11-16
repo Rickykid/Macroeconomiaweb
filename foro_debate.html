@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foro de Debate - Análisis de Noticias de Macroeconomía</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #004080;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .discussion {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        .discussion-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .comment-section {
+            margin-top: 20px;
+        }
+        .comment {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .comment-author {
+            font-weight: bold;
+        }
+        form {
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #004080;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #003060;
+        }
+        .file-upload {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Foro de Debate - Análisis de Noticias de Macroeconomía</h1>
+    </header>
+    <div class="container">
+        <section>
+            <h2>Noticia Seleccionada</h2>
+            <p>El Banco Central Europeo (BCE) bajó los tipos de interés tras la oposición inicial de algunos miembros. La decisión se tomó tras considerar que había poco riesgo asociado al recorte, mientras que el peligro de esperar y actuar tarde era mayor.</p>
+            <p>Publicado el 16 de noviembre de 2024 en "El Diario Económico".</p>
+            <p><strong>Resumen:</strong> El Banco Central Europeo ha decidido reducir los tipos de interés tras la oposición inicial de algunos miembros. Esta decisión se basó en la evaluación de riesgos, considerando que actuar de forma anticipada sería más beneficioso que esperar y actuar tarde. El objetivo es mantener la estabilidad económica a pesar de las incertidumbres actuales.</p>
+            <p><a href="https://www.expansion.com/mercados/2024/11/14/673620fc468aebd10a8b45a6.html" target="_blank">Leer la noticia completa</a></p>
+        </section>
+        
+        <section class="discussion-section">
+            <h2>Discusiones Abiertas</h2>
+            <div id="discussions">
+                <!-- Aquí se mostrarán las discusiones abiertas -->
+            </div>
+            <form id="discussionForm">
+                <label for="discussionTitle">Título de la Discusión:</label>
+                <input type="text" id="discussionTitle" name="discussionTitle" required>
+                <button type="submit">Crear Discusión</button>
+            </form>
+        </section>
+
+        <section class="comment-section" id="commentsSection" style="display:none;">
+            <h2>Comentarios de la Discusión</h2>
+            <div id="comments">
+                <!-- Aquí se mostrarán los comentarios de la discusión seleccionada -->
+            </div>
+            <form id="commentForm">
+                <label for="author">Nombre:</label>
+                <input type="text" id="author" name="author" required>
+                <label for="comment">Comentario:</label>
+                <textarea id="comment" name="comment" required></textarea>
+                <button type="submit">Enviar Comentario</button>
+            </form>
+        </section>
+
+        <section class="file-upload">
+            <h2>Subir Informes y Materiales Adicionales</h2>
+            <form id="fileUploadForm">
+                <label for="file">Seleccionar Archivo:</label>
+                <input type="file" id="file" name="file" required>
+                <button type="submit">Subir Archivo</button>
+            </form>
+            <div id="uploadedFiles">
+                <!-- Aquí se mostrarán los archivos subidos -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const discussions = [];
+        const uploadedFiles = [];
+        
+        document.getElementById('discussionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('discussionTitle').value;
+            
+            const discussion = {
+                title: title,
+                comments: []
+            };
+            
+            discussions.push(discussion);
+            renderDiscussions();
+            
+            document.getElementById('discussionForm').reset();
+        });
+
+        function renderDiscussions() {
+            const discussionsContainer = document.getElementById('discussions');
+            discussionsContainer.innerHTML = '';
+            
+            discussions.forEach((discussion, index) => {
+                const discussionDiv = document.createElement('div');
+                discussionDiv.classList.add('discussion');
+                discussionDiv.innerHTML = `<p class="discussion-title" onclick="openDiscussion(${index})">${discussion.title}</p>`;
+                discussionsContainer.appendChild(discussionDiv);
+            });
+        }
+
+        function openDiscussion(index) {
+            const discussion = discussions[index];
+            document.getElementById('commentsSection').style.display = 'block';
+            document.getElementById('comments').innerHTML = '';
+            
+            discussion.comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+                commentDiv.innerHTML = `<p class="comment-author">${comment.author}</p><p>${comment.text}</p>`;
+                document.getElementById('comments').appendChild(commentDiv);
+            });
+
+            document.getElementById('commentForm').onsubmit = function(event) {
+                event.preventDefault();
+                
+                const author = document.getElementById('author').value;
+                const text = document.getElementById('comment').value;
+                
+                const newComment = {
+                    author: author,
+                    text: text
+                };
+                
+                discussion.comments.push(newComment);
+                renderComments(discussion);
+                
+                document.getElementById('commentForm').reset();
+            };
+        }
+
+        function renderComments(discussion) {
+            const commentsContainer = document.getElementById('comments');
+            commentsContainer.innerHTML = '';
+            
+            discussion.comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+                commentDiv.innerHTML = `<p class="comment-author">${comment.author}</p><p>${comment.text}</p>`;
+                commentsContainer.appendChild(commentDiv);
+            });
+        }
+
+        document.getElementById('fileUploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const fileId = uploadedFiles.length;
+                uploadedFiles.push({ id: fileId, name: file.name });
+                renderUploadedFiles();
+                fileInput.value = '';
+            }
+        });
+
+        function renderUploadedFiles() {
+            const uploadedFilesContainer = document.getElementById('uploadedFiles');
+            uploadedFilesContainer.innerHTML = '';
+            
+            uploadedFiles.forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.classList.add('file-item');
+                fileDiv.innerHTML = `<p>${file.name}</p>`;
+                uploadedFilesContainer.appendChild(fileDiv);
+            });
+        }
+    </script>
+</body>
+</html>
